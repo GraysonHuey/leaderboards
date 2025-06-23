@@ -192,12 +192,12 @@ const AdminPanel: React.FC = () => {
     }
 
     // Show strong confirmation dialog
-    const confirmMessage = `⚠️ DANGER: Delete ${user.name}'s account permanently?\n\nThis action:\n• Cannot be undone\n• Will remove all their data\n• Will delete their point history\n• Will remove them from all leaderboards\n\nType "${user.name}" to confirm deletion:`;
+    const confirmMessage = `⚠️ DANGER: Delete ${user.name}'s account permanently?\n\nThis action:\n• Cannot be undone\n• Will remove all their data\n• Will delete their point history\n• Will remove them from all leaderboards\n\nType "${user.name}" to confirm deletion (case doesn't matter):`;
     
     const confirmation = prompt(confirmMessage);
-    if (confirmation !== user.name) {
+    if (confirmation?.toLowerCase() !== user.name.toLowerCase()) {
       if (confirmation !== null) {
-        alert('Deletion cancelled - name did not match exactly.');
+        alert('Deletion cancelled - name did not match.');
       }
       return;
     }
@@ -225,12 +225,12 @@ const AdminPanel: React.FC = () => {
     }
 
     // Show strong confirmation dialog
-    const confirmMessage = `⚠️ DANGER: Reset ALL points in the entire system to 0?\n\nThis action:\n• Cannot be undone\n• Will reset every user's points to 0\n• Will affect all leaderboards\n• Will clear all section standings\n\nType "RESET ALL POINTS" to confirm:`;
+    const confirmMessage = `⚠️ DANGER: Reset ALL points in the entire system to 0?\n\nThis action:\n• Cannot be undone\n• Will reset every user's points to 0\n• Will affect all leaderboards\n• Will clear all section standings\n\nType "reset all points" to confirm (case doesn't matter):`;
     
     const confirmation = prompt(confirmMessage);
-    if (confirmation !== 'RESET ALL POINTS') {
+    if (confirmation?.toLowerCase() !== 'reset all points') {
       if (confirmation !== null) {
-        alert('Point reset cancelled - confirmation text did not match exactly.');
+        alert('Point reset cancelled - confirmation text did not match.');
       }
       return;
     }
@@ -315,9 +315,6 @@ const AdminPanel: React.FC = () => {
                 ? 'bg-gray-500 border-gray-500' 
                 : 'bg-transparent border-white/40 hover:border-white/60'
             }`}>
-              {user.role === 'member' && (
-                <div className="w-2 h-2 bg-white rounded-full absolute top-0.5 left-0.5"></div>
-              )}
             </div>
             <span className={`text-xs ${user.role === 'member' ? 'text-gray-400' : 'text-white/70'}`}>
               Member
@@ -388,12 +385,12 @@ const AdminPanel: React.FC = () => {
     <div className="space-y-6">
       {/* Header */}
       <div className="text-center mb-8">
-        <h1 className="text-4xl font-bold text-white mb-2">Admin Panel</h1>
-        <p className="text-white/70 text-lg">Manage users, sections, and points</p>
+        <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">Admin Panel</h1>
+        <p className="text-white/70 text-base md:text-lg">Manage users, sections, and points</p>
         {!canModifyRoles && (
           <div className="mt-4 bg-amber-500/10 border border-amber-500/20 rounded-lg p-3 max-w-2xl mx-auto">
             <div className="flex items-center justify-center space-x-2 text-amber-200">
-              <AlertTriangle className="h-4 w-4" />
+              <AlertTriangle className="h-4 w-4 flex-shrink-0" />
               <span className="text-sm">
                 <strong>Note:</strong> Only Head Admins can modify admin roles
               </span>
@@ -472,103 +469,181 @@ const AdminPanel: React.FC = () => {
         {filteredUsers.map((user) => (
           <div
             key={user.id}
-            className="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20"
+            className="bg-white/10 backdrop-blur-md rounded-xl p-4 md:p-6 border border-white/20"
           >
-            <div className="flex items-start justify-between">
-              <div className="flex items-center space-x-4">
+            {/* Mobile Layout */}
+            <div className="block md:hidden space-y-4">
+              {/* User Info */}
+              <div className="flex items-center space-x-3">
                 {user.avatar_url && (
                   <img
                     src={user.avatar_url}
                     alt={user.name}
-                    className="h-12 w-12 rounded-full border-2 border-white/20"
+                    className="h-10 w-10 rounded-full border-2 border-white/20 flex-shrink-0"
                   />
                 )}
-                <div>
-                  <h3 className="text-lg font-semibold text-white flex items-center space-x-2">
-                    <span>{user.name}</span>
+                <div className="flex-1 min-w-0">
+                  <div className="flex flex-wrap items-center gap-2 mb-1">
+                    <h3 className="text-base font-semibold text-white truncate">{user.name}</h3>
                     {getRoleBadge(user.role, user.id === currentUser?.id)}
                     {user.id === currentUser?.id && (
                       <span className="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded-full">You</span>
                     )}
-                  </h3>
-                  <p className="text-white/60 text-sm">{user.email}</p>
+                  </div>
+                  <p className="text-white/60 text-sm truncate">{user.email}</p>
                   <p className="text-white/60 text-sm">Points: {user.points}</p>
                 </div>
               </div>
-              
-              <div className="flex items-start space-x-6">
+
+              {/* Controls Grid */}
+              <div className="grid grid-cols-1 gap-4">
                 {/* Role Management */}
-                <div className="min-w-[120px]">
-                  <h4 className="text-sm font-medium text-white/80 mb-2">Role</h4>
+                <div className="bg-white/5 rounded-lg p-3">
+                  <h4 className="text-sm font-medium text-white/80 mb-3">Role</h4>
                   {getRoleControls(user)}
                 </div>
 
-                {/* Section Selector */}
-                <div className="relative">
-                  <h4 className="text-sm font-medium text-white/80 mb-2">Section</h4>
-                  <select
-                    value={user.section}
-                    onChange={(e) => handleSectionUpdate(user.id, e.target.value)}
-                    className="bg-white/10 border border-white/20 rounded-lg text-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 pr-8"
-                  >
-                    {user.section === 'unassigned' && (
-                      <option value="unassigned">Unassigned</option>
-                    )}
-                    {sections.map(section => (
-                      <option key={section} value={section} className="bg-gray-800">
-                        {section.charAt(0).toUpperCase() + section.slice(1)}
-                      </option>
-                    ))}
-                  </select>
-                  <div className="absolute right-2 top-8 transform -translate-y-1/2 pointer-events-none">
-                    {user.section === 'unassigned' ? (
-                      <div className="h-4 w-4 text-green-400" />
-                    ) : (
-                      <div className="h-4 w-4 text-amber-400" />
-                    )}
+                {/* Section and Actions */}
+                <div className="grid grid-cols-2 gap-3">
+                  {/* Section Selector */}
+                  <div className="bg-white/5 rounded-lg p-3">
+                    <h4 className="text-sm font-medium text-white/80 mb-2">Section</h4>
+                    <select
+                      value={user.section}
+                      onChange={(e) => handleSectionUpdate(user.id, e.target.value)}
+                      className="w-full bg-white/10 border border-white/20 rounded-lg text-white px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
+                    >
+                      {user.section === 'unassigned' && (
+                        <option value="unassigned">Unassigned</option>
+                      )}
+                      {sections.map(section => (
+                        <option key={section} value={section} className="bg-gray-800">
+                          {section.charAt(0).toUpperCase() + section.slice(1)}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Points Button */}
+                  <div className="bg-white/5 rounded-lg p-3">
+                    <h4 className="text-sm font-medium text-white/80 mb-2">Points</h4>
+                    <button
+                      onClick={() => setSelectedUser(user)}
+                      className="w-full bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 px-3 py-1 rounded-lg transition-colors flex items-center justify-center space-x-1 text-sm"
+                    >
+                      <Settings className="h-3 w-3" />
+                      <span>Manage</span>
+                    </button>
                   </div>
                 </div>
-                
-                {/* Points Button */}
-                <div>
-                  <h4 className="text-sm font-medium text-white/80 mb-2">Points</h4>
-                  <button
-                    onClick={() => setSelectedUser(user)}
-                    className="bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 px-4 py-2 rounded-lg transition-colors flex items-center space-x-2"
-                  >
-                    <Settings className="h-4 w-4" />
-                    <span>Manage</span>
-                  </button>
-                </div>
 
-                {/* Delete User Button (Head Admin Only) */}
+                {/* Delete Button (Head Admin Only) */}
                 {canDeleteUsers && (
-                  <div>
-                    <h4 className="text-sm font-medium text-white/80 mb-2">Account</h4>
+                  <div className="bg-red-500/10 rounded-lg p-3">
+                    <h4 className="text-sm font-medium text-red-400 mb-2">Danger Zone</h4>
                     <button
                       onClick={() => handleDeleteUser(user.id)}
-                      className="bg-red-500/20 hover:bg-red-500/30 text-red-400 px-4 py-2 rounded-lg transition-colors flex items-center space-x-2"
+                      className="w-full bg-red-500/20 hover:bg-red-500/30 text-red-400 px-3 py-2 rounded-lg transition-colors flex items-center justify-center space-x-2 text-sm"
                     >
                       <Trash2 className="h-4 w-4" />
-                      <span>Delete</span>
+                      <span>Delete Account</span>
                     </button>
                   </div>
                 )}
               </div>
             </div>
-            
-            {/* Section Status */}
-            <div className="mt-4 flex items-center justify-between">
-              <div className="flex items-center space-x-2 text-sm">
-                {user.section === 'unassigned' ? (
-                  <div className="flex items-center space-x-2 text-orange-400">
-                    <Unlock className="h-4 w-4" />
-                    <span>Awaiting section assignment</span>
+
+            {/* Desktop Layout */}
+            <div className="hidden md:block">
+              <div className="flex items-start justify-between">
+                <div className="flex items-center space-x-4">
+                  {user.avatar_url && (
+                    <img
+                      src={user.avatar_url}
+                      alt={user.name}
+                      className="h-12 w-12 rounded-full border-2 border-white/20"
+                    />
+                  )}
+                  <div>
+                    <h3 className="text-lg font-semibold text-white flex items-center space-x-2">
+                      <span>{user.name}</span>
+                      {getRoleBadge(user.role, user.id === currentUser?.id)}
+                      {user.id === currentUser?.id && (
+                        <span className="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded-full">You</span>
+                      )}
+                    </h3>
+                    <p className="text-white/60 text-sm">{user.email}</p>
+                    <p className="text-white/60 text-sm">Points: {user.points}</p>
                   </div>
-                ) : (
-                  <div className="flex items-center space-x-2 text-green-400">
+                </div>
+                
+                <div className="flex items-start space-x-6">
+                  {/* Role Management */}
+                  <div className="min-w-[120px]">
+                    <h4 className="text-sm font-medium text-white/80 mb-2">Role</h4>
+                    {getRoleControls(user)}
                   </div>
-                )}
+
+                  {/* Section Selector */}
+                  <div className="relative">
+                    <h4 className="text-sm font-medium text-white/80 mb-2">Section</h4>
+                    <select
+                      value={user.section}
+                      onChange={(e) => handleSectionUpdate(user.id, e.target.value)}
+                      className="bg-white/10 border border-white/20 rounded-lg text-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 pr-8"
+                    >
+                      {user.section === 'unassigned' && (
+                        <option value="unassigned">Unassigned</option>
+                      )}
+                      {sections.map(section => (
+                        <option key={section} value={section} className="bg-gray-800">
+                          {section.charAt(0).toUpperCase() + section.slice(1)}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  
+                  {/* Points Button */}
+                  <div>
+                    <h4 className="text-sm font-medium text-white/80 mb-2">Points</h4>
+                    <button
+                      onClick={() => setSelectedUser(user)}
+                      className="bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 px-4 py-2 rounded-lg transition-colors flex items-center space-x-2"
+                    >
+                      <Settings className="h-4 w-4" />
+                      <span>Manage</span>
+                    </button>
+                  </div>
+
+                  {/* Delete User Button (Head Admin Only) */}
+                  {canDeleteUsers && (
+                    <div>
+                      <h4 className="text-sm font-medium text-white/80 mb-2">Account</h4>
+                      <button
+                        onClick={() => handleDeleteUser(user.id)}
+                        className="bg-red-500/20 hover:bg-red-500/30 text-red-400 px-4 py-2 rounded-lg transition-colors flex items-center space-x-2"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                        <span>Delete</span>
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+              
+              {/* Section Status */}
+              <div className="mt-4 flex items-center justify-between">
+                <div className="flex items-center space-x-2 text-sm">
+                  {user.section === 'unassigned' ? (
+                    <div className="flex items-center space-x-2 text-orange-400">
+                      <Unlock className="h-4 w-4" />
+                      <span>Awaiting section assignment</span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center space-x-2 text-green-400">
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>
@@ -586,10 +661,10 @@ const AdminPanel: React.FC = () => {
       {/* Head Admin System Controls */}
       {currentUser?.role === 'head_admin' && (
         <div className="mt-12 pt-8 border-t border-red-500/20">
-          <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-6">
+          <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4 md:p-6">
             <div className="flex items-center space-x-3 mb-4">
-              <AlertTriangle className="h-6 w-6 text-red-400" />
-              <h3 className="text-xl font-semibold text-red-400">System Administration</h3>
+              <AlertTriangle className="h-6 w-6 text-red-400 flex-shrink-0" />
+              <h3 className="text-lg md:text-xl font-semibold text-red-400">System Administration</h3>
             </div>
             <p className="text-red-300 text-sm mb-6">
               ⚠️ <strong>Danger Zone:</strong> These actions affect the entire system and cannot be undone.
@@ -599,7 +674,7 @@ const AdminPanel: React.FC = () => {
               <button
                 onClick={handleClearAllPoints}
                 disabled={clearingPoints}
-                className="bg-red-500/20 hover:bg-red-500/30 disabled:bg-red-500/10 text-red-400 disabled:text-red-400/50 px-6 py-3 rounded-lg transition-colors flex items-center space-x-2 font-semibold"
+                className="bg-red-500/20 hover:bg-red-500/30 disabled:bg-red-500/10 text-red-400 disabled:text-red-400/50 px-4 md:px-6 py-3 rounded-lg transition-colors flex items-center space-x-2 font-semibold text-sm md:text-base"
               >
                 {clearingPoints ? (
                   <>
