@@ -1,6 +1,6 @@
 import React from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
-import { Music, Trophy, Users, Settings, LogOut } from 'lucide-react';
+import { Music, Trophy, Users, Settings, LogOut, Crown } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 
 const Layout: React.FC = () => {
@@ -22,9 +22,26 @@ const Layout: React.FC = () => {
     { path: '/dashboard/section', label: 'My Section', icon: Users },
   ];
 
-  if (user?.role === 'admin') {
+  // Add admin panel for admins and head admins
+  if (user?.role === 'admin' || user?.role === 'head_admin') {
     navItems.push({ path: '/dashboard/admin', label: 'Admin', icon: Settings });
   }
+
+  const getRoleDisplay = (role: string) => {
+    switch (role) {
+      case 'head_admin': return 'Head Admin';
+      case 'admin': return 'Admin';
+      default: return role;
+    }
+  };
+
+  const getRoleColor = (role: string) => {
+    switch (role) {
+      case 'head_admin': return 'text-amber-400';
+      case 'admin': return 'text-blue-400';
+      default: return 'text-white/60';
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800">
@@ -69,8 +86,19 @@ const Layout: React.FC = () => {
                     />
                   )}
                   <div className="text-white">
-                    <p className="text-sm font-medium">{user?.name}</p>
-                    <p className="text-xs text-white/60 capitalize">{user?.section}</p>
+                    <div className="flex items-center space-x-2">
+                      <p className="text-sm font-medium">{user?.name}</p>
+                      {user?.role === 'head_admin' && (
+                        <Crown className="h-4 w-4 text-amber-400" />
+                      )}
+                    </div>
+                    <div className="flex items-center space-x-2 text-xs">
+                      <span className="text-white/60 capitalize">{user?.section}</span>
+                      <span className="text-white/40">•</span>
+                      <span className={getRoleColor(user?.role || '')}>
+                        {getRoleDisplay(user?.role || '')}
+                      </span>
+                    </div>
                   </div>
                 </div>
                 <button

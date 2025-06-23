@@ -5,7 +5,7 @@ import {
   signOut as firebaseSignOut,
   onAuthStateChanged
 } from 'firebase/auth';
-import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, getDoc, setDoc, serverTimestamp, onSnapshot } from 'firebase/firestore';
 import { auth, googleProvider, db } from '../lib/firebase';
 import { User } from '../types';
 
@@ -37,7 +37,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setFirebaseUser(firebaseUser);
       
       if (firebaseUser) {
-        await fetchUserProfile(firebaseUser);
+        await setupUserListener(firebaseUser);
       } else {
         setUser(null);
         setLoading(false);
@@ -47,24 +47,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return () => unsubscribe();
   }, []);
 
-  const fetchUserProfile = async (firebaseUser: FirebaseUser) => {
+  const setupUserListener = async (firebaseUser: FirebaseUser) => {
     try {
       const userDocRef = doc(db, 'users', firebaseUser.uid);
+      
+      // First check if user exists, create if not
       const userDoc = await getDoc(userDocRef);
-
-      if (userDoc.exists()) {
-        const userData = userDoc.data();
-        setUser({
-          id: firebaseUser.uid,
-          email: userData.email,
-          name: userData.name,
-          avatar_url: userData.avatar_url,
-          section: userData.section,
-          role: userData.role,
-          points: userData.points,
-          created_at: userData.created_at?.toDate?.()?.toISOString() || new Date().toISOString(),
-        });
-      } else {
+      
+      if (!userDoc.exists()) {
         // Create user profile if doesn't exist
         const newUser = {
           email: firebaseUser.email || '',
@@ -77,21 +67,33 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         };
 
         await setDoc(userDocRef, newUser);
-        
-        setUser({
-          id: firebaseUser.uid,
-          email: newUser.email,
-          name: newUser.name,
-          avatar_url: newUser.avatar_url,
-          section: newUser.section,
-          role: newUser.role,
-          points: newUser.points,
-          created_at: new Date().toISOString(),
-        });
       }
+
+      // Set up real-time listener for user document changes
+      const unsubscribeUser = onSnapshot(userDocRef, (doc) => {
+        if (doc.exists()) {
+          const userData = doc.data();
+          setUser({
+            id: firebaseUser.uid,
+            email: userData.email,
+            name: userData.name,
+            avatar_url: userData.avatar_url,
+            section: userData.section,
+            role: userData.role,
+            points: userData.points,
+            created_at: userData.created_at?.toDate?.()?.toISOString() || new Date().toISOString(),
+          });
+        }
+        setLoading(false);
+      }, (error) => {
+        console.error('Error listening to user document:', error);
+        setLoading(false);
+      });
+
+      // Store the unsubscribe function to clean up later
+      return unsubscribeUser;
     } catch (error) {
-      console.error('Error fetching user profile:', error);
-    } finally {
+      console.error('Error setting up user listener:', error);
       setLoading(false);
     }
   };

@@ -5,9 +5,14 @@ import { useAuth } from '../contexts/AuthContext';
 interface ProtectedRouteProps {
   children: React.ReactNode;
   requireAdmin?: boolean;
+  requireHeadAdmin?: boolean;
 }
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requireAdmin = false }) => {
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ 
+  children, 
+  requireAdmin = false, 
+  requireHeadAdmin = false 
+}) => {
   const { user, loading } = useAuth();
 
   if (loading) {
@@ -22,7 +27,13 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requireAdmin 
     return <Navigate to="/" replace />;
   }
 
-  if (requireAdmin && user.role !== 'admin') {
+  // Check for Head Admin access
+  if (requireHeadAdmin && user.role !== 'head_admin') {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  // Check for Admin access (includes Head Admin)
+  if (requireAdmin && user.role !== 'admin' && user.role !== 'head_admin') {
     return <Navigate to="/dashboard" replace />;
   }
 

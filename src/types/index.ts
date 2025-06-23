@@ -4,7 +4,7 @@ export interface User {
   name: string;
   avatar_url?: string;
   section: string;
-  role: 'member' | 'admin';
+  role: 'member' | 'admin' | 'head_admin';
   points: number;
   created_at: string;
 }

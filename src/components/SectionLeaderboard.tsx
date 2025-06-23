@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Trophy, Star, TrendingUp, Users } from 'lucide-react';
+import { Trophy, Star, TrendingUp, Users, Crown, ShieldCheck } from 'lucide-react';
 import { collection, query, where, getDocs, orderBy } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { useAuth } from '../contexts/AuthContext';
@@ -77,6 +77,27 @@ const SectionLeaderboard: React.FC = () => {
       case 1: return 'border-gray-400';
       case 2: return 'border-yellow-600';
       default: return 'border-blue-400';
+    }
+  };
+
+  const getRoleBadge = (role: string, isCurrentUser: boolean) => {
+    switch (role) {
+      case 'head_admin':
+        return (
+          <span className="text-xs bg-amber-500/20 text-amber-400 px-2 py-1 rounded-full flex items-center space-x-1">
+            <Crown className="h-3 w-3" />
+            <span>Leadership</span>
+          </span>
+        );
+      case 'admin':
+        return (
+          <span className="text-xs bg-blue-500/20 text-blue-400 px-2 py-1 rounded-full flex items-center space-x-1">
+            <ShieldCheck className="h-3 w-3" />
+            <span>Leadership</span>
+          </span>
+        );
+      default:
+        return null;
     }
   };
 
@@ -187,11 +208,9 @@ const SectionLeaderboard: React.FC = () => {
                   <div>
                     <h3 className="text-lg font-semibold text-white flex items-center space-x-2">
                       <span>{member.name}</span>
+                      {getRoleBadge(member.role, member.id === user.id)}
                       {member.id === user.id && (
                         <span className="text-xs bg-amber-500/20 text-amber-400 px-2 py-1 rounded-full">You</span>
-                      )}
-                      {member.role === 'admin' && (
-                        <span className="text-xs bg-blue-500/20 text-blue-400 px-2 py-1 rounded-full">Admin</span>
                       )}
                     </h3>
                     <p className="text-white/60 text-sm">{member.email}</p>
