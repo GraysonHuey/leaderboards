@@ -315,9 +315,6 @@ const AdminPanel: React.FC = () => {
                 ? 'bg-gray-500 border-gray-500' 
                 : 'bg-transparent border-white/40 hover:border-white/60'
             }`}>
-              {user.role === 'member' && (
-                <div className="w-2 h-2 bg-white rounded-full absolute top-0.5 left-0.5"></div>
-              )}
             </div>
             <span className={`text-xs ${user.role === 'member' ? 'text-gray-400' : 'text-white/70'}`}>
               Member
