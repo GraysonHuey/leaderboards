@@ -89,7 +89,7 @@ function App() {
   }
 
   return (
-    <Router>
+    <Router basename="/leaderboards">
       <AuthProvider>
         <AppContent />
       </AuthProvider>
