@@ -23,7 +23,7 @@ const LoginPage: React.FC = () => {
               <Music className="h-8 w-8 sm:h-12 sm:w-12 text-amber-400" />
             </div>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">WARU Band Olympics 2025</h1>
+          <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">WARU Band Olympics</h1>
           <p className="text-white/70 text-base sm:text-lg">See how your section is doing in the Band Olympics!</p>
         </div>
 
