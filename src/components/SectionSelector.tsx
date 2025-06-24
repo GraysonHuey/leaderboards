@@ -10,14 +10,15 @@ const SectionSelector: React.FC = () => {
   const [loading, setLoading] = useState(false);
 
   const sections = [
-    { id: 'trumpets', name: 'Trumpets', icon: '🎺', description: 'SL: Lucas Langley\nASL: Kaden Raines' },
-    { id: 'clarinets', name: 'Clarinets', icon: '🎵', description: '' },
-    { id: 'trombones', name: 'Trombones', icon: '🎺', description: '' },
-    { id: 'flutes', name: 'Flutes', icon: '🎶', description: '' },
-    { id: 'percussion', name: 'Percussion', icon: '🥁', description: '' },
-    { id: 'saxophones', name: 'Saxophones', icon: '🎷', description: '' },
-    { id: 'euphoniums', name: 'Euphoniums', icon: '🎺', description: '' },
-    { id: 'tubas', name: 'Tubas', icon: '🎺', description: '' },
+    { id: 'trumpets', name: 'Trumpets', icon: '🎺', description: 'SL: Lucas Langley | ASL: Kaden Raines' },
+    { id: 'clarinets', name: 'Clarinets', icon: '🎵', description: 'SL: Alexander Al-Murrani | ASL: Noah Hawkinson-Penny' },
+    { id: 'trombones', name: 'Trombones', icon: '🎺', description: 'SL: Lucy May | ASL: Jalile El-Azri' },
+    { id: 'flutes', name: 'Flutes', icon: '🎶', description: 'SL: Summer Phillips | ASL: N/A' },
+    { id: 'battery', name: 'Battery', icon: '🥁', description: 'Captain: Taegan Engle' },
+    { id: 'front ensemble', name: 'Front Ensemble', icon: '🥁', description: 'Captain: Parker Dixson' },
+    { id: 'saxophones', name: 'Saxophones', icon: '🎷', description: 'SL Alto: Cedric Geotz | ASL Tenor: Easton Holthaus | ASL Bari: Kieran Dillon' },
+    { id: 'euphoniums', name: 'Euphoniums', icon: '🎺', description: 'SL: Noah St. John | ASL: Michael Leonard' },
+    { id: 'tubas', name: 'Tubas', icon: '🎺', description: 'SL: Blake Kelly | ASL: Everett Birch' },
     { id: 'drum majors', name: 'Drum Majors', icon: '🎖️', description: '' },
   ];
 
