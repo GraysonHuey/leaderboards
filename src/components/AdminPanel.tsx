@@ -387,16 +387,6 @@ const AdminPanel: React.FC = () => {
       <div className="text-center mb-8">
         <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">Admin Panel</h1>
         <p className="text-white/70 text-base md:text-lg">Manage users, sections, and points</p>
-        {!canModifyRoles && (
-          <div className="mt-4 bg-amber-500/10 border border-amber-500/20 rounded-lg p-3 max-w-2xl mx-auto">
-            <div className="flex items-center justify-center space-x-2 text-amber-200">
-              <AlertTriangle className="h-4 w-4 flex-shrink-0" />
-              <span className="text-sm">
-                <strong>Note:</strong> Only Head Admins can modify admin roles
-              </span>
-            </div>
-          </div>
-        )}
       </div>
 
       {/* Search Bar */}
