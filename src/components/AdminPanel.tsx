@@ -28,7 +28,7 @@ const AdminPanel: React.FC = () => {
 
   const sections = [
     'trumpets', 'clarinets', 'trombones', 'flutes', 
-    'percussion', 'saxophones', 'euphoniums', 'tubas',
+    'battery', 'front ensemble', 'saxophones', 'euphoniums', 'tubas',
     'drum majors'
   ];
 
@@ -130,7 +130,7 @@ const AdminPanel: React.FC = () => {
 
   const handleRoleUpdate = async (userId: string, newRole: 'member' | 'admin' | 'head_admin') => {
     const user = users.find(u => u.id === userId);
-    if (!user || user.id === currentUser?.id) return;
+    if (!user) return;
 
     // Only Head Admins can modify admin roles
     if (currentUser?.role !== 'head_admin') {
@@ -291,10 +291,10 @@ const AdminPanel: React.FC = () => {
   };
 
   const getRoleControls = (user: User) => {
-    if (!canModifyRoles || user.id === currentUser?.id) {
+    if (!canModifyRoles) {
       return (
         <div className="text-xs text-white/50 text-center">
-          {user.id === currentUser?.id ? 'Cannot modify your own role' : 'Head Admin required'}
+          {'Head Admin required'}
         </div>
       );
     }
