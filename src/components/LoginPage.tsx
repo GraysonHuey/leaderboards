@@ -23,15 +23,15 @@ const LoginPage: React.FC = () => {
               <Music className="h-12 w-12 text-amber-400" />
             </div>
           </div>
-          <h1 className="text-4xl font-bold text-white mb-2">BandScore</h1>
-          <p className="text-white/70 text-lg">Track your musical journey</p>
+          <h1 className="text-4xl font-bold text-white mb-2">Band Olympics Leaderboards</h1>
+          <p className="text-white/70 text-lg">See how your section is doing in the Band Olympics!</p>
         </div>
 
         {/* Login Card */}
         <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20 shadow-2xl">
           <div className="text-center mb-6">
             <h2 className="text-2xl font-semibold text-white mb-2">Welcome Back</h2>
-            <p className="text-white/60">Sign in to access your band dashboard</p>
+            <p className="text-white/60">Sign in to access your dashboard</p>
           </div>
 
           <button
@@ -59,25 +59,6 @@ const LoginPage: React.FC = () => {
             </svg>
             <span>{loading ? 'Signing in...' : 'Continue with Google'}</span>
           </button>
-
-          {/* Features Preview */}
-          <div className="mt-8 pt-6 border-t border-white/20">
-            <p className="text-white/60 text-sm text-center mb-4">What you'll get access to:</p>
-            <div className="space-y-3">
-              <div className="flex items-center space-x-3 text-white/80">
-                <Trophy className="h-4 w-4 text-amber-400" />
-                <span className="text-sm">Section leaderboards</span>
-              </div>
-              <div className="flex items-center space-x-3 text-white/80">
-                <Users className="h-4 w-4 text-amber-400" />
-                <span className="text-sm">Member rankings</span>
-              </div>
-              <div className="flex items-center space-x-3 text-white/80">
-                <Star className="h-4 w-4 text-amber-400" />
-                <span className="text-sm">Point tracking</span>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
