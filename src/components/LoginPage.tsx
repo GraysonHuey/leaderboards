@@ -14,30 +14,30 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 flex items-center justify-center px-4 py-8">
       <div className="max-w-md w-full">
         {/* Logo and Title */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-6 sm:mb-8">
           <div className="flex justify-center mb-4">
-            <div className="p-4 bg-amber-500/20 rounded-full">
-              <Music className="h-12 w-12 text-amber-400" />
+            <div className="p-3 sm:p-4 bg-amber-500/20 rounded-full">
+              <Music className="h-8 w-8 sm:h-12 sm:w-12 text-amber-400" />
             </div>
           </div>
-          <h1 className="text-4xl font-bold text-white mb-2">Band Olympics Leaderboards</h1>
-          <p className="text-white/70 text-lg">See how your section is doing in the Band Olympics!</p>
+          <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">BandScore</h1>
+          <p className="text-white/70 text-base sm:text-lg">Track your musical journey</p>
         </div>
 
         {/* Login Card */}
-        <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20 shadow-2xl">
+        <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 sm:p-8 border border-white/20 shadow-2xl">
           <div className="text-center mb-6">
-            <h2 className="text-2xl font-semibold text-white mb-2">Welcome Back</h2>
-            <p className="text-white/60">Sign in to access your dashboard</p>
+            <h2 className="text-xl sm:text-2xl font-semibold text-white mb-2">Welcome Back</h2>
+            <p className="text-white/60 text-sm sm:text-base">Sign in to access your band dashboard</p>
           </div>
 
           <button
             onClick={handleGoogleSignIn}
             disabled={loading}
-            className="w-full bg-white hover:bg-gray-50 text-gray-900 font-semibold py-3 px-4 rounded-lg transition-all duration-200 flex items-center justify-center space-x-3 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+            className="w-full bg-white hover:bg-gray-50 text-gray-900 font-semibold py-3 px-4 rounded-lg transition-all duration-200 flex items-center justify-center space-x-3 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 text-sm sm:text-base"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
               <path
@@ -59,6 +59,25 @@ const LoginPage: React.FC = () => {
             </svg>
             <span>{loading ? 'Signing in...' : 'Continue with Google'}</span>
           </button>
+
+          {/* Features Preview */}
+          <div className="mt-6 sm:mt-8 pt-6 border-t border-white/20">
+            <p className="text-white/60 text-xs sm:text-sm text-center mb-4">What you'll get access to:</p>
+            <div className="space-y-3">
+              <div className="flex items-center space-x-3 text-white/80">
+                <Trophy className="h-4 w-4 text-amber-400 flex-shrink-0" />
+                <span className="text-xs sm:text-sm">Section leaderboards</span>
+              </div>
+              <div className="flex items-center space-x-3 text-white/80">
+                <Users className="h-4 w-4 text-amber-400 flex-shrink-0" />
+                <span className="text-xs sm:text-sm">Member rankings</span>
+              </div>
+              <div className="flex items-center space-x-3 text-white/80">
+                <Star className="h-4 w-4 text-amber-400 flex-shrink-0" />
+                <span className="text-xs sm:text-sm">Point tracking</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
