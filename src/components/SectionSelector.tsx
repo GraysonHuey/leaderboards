@@ -10,15 +10,15 @@ const SectionSelector: React.FC = () => {
   const [loading, setLoading] = useState(false);
 
   const sections = [
-    { id: 'trumpets', name: 'Trumpets', icon: '🎺', description: 'Brass section leaders' },
-    { id: 'clarinets', name: 'Clarinets', icon: '🎵', description: 'Woodwind harmony' },
-    { id: 'trombones', name: 'Trombones', icon: '🎺', description: 'Low brass power' },
-    { id: 'flutes', name: 'Flutes', icon: '🎶', description: 'High woodwind melody' },
-    { id: 'percussion', name: 'Percussion', icon: '🥁', description: 'Rhythm section' },
-    { id: 'saxophones', name: 'Saxophones', icon: '🎷', description: 'Jazz and soul' },
-    { id: 'euphoniums', name: 'Euphoniums', icon: '🎺', description: 'Mid-range brass' },
-    { id: 'tubas', name: 'Tubas', icon: '🎺', description: 'Bass foundation' },
-    { id: 'drum majors', name: 'Drum Majors', icon: '🎖️', description: 'Field leadership' },
+    { id: 'trumpets', name: 'Trumpets', icon: '🎺', description: 'SL: Lucas Langley\nASL: Kaden Raines' },
+    { id: 'clarinets', name: 'Clarinets', icon: '🎵', description: '' },
+    { id: 'trombones', name: 'Trombones', icon: '🎺', description: '' },
+    { id: 'flutes', name: 'Flutes', icon: '🎶', description: '' },
+    { id: 'percussion', name: 'Percussion', icon: '🥁', description: '' },
+    { id: 'saxophones', name: 'Saxophones', icon: '🎷', description: '' },
+    { id: 'euphoniums', name: 'Euphoniums', icon: '🎺', description: '' },
+    { id: 'tubas', name: 'Tubas', icon: '🎺', description: '' },
+    { id: 'drum majors', name: 'Drum Majors', icon: '🎖️', description: '' },
   ];
 
   const handleSectionSelect = async () => {
@@ -51,7 +51,7 @@ const SectionSelector: React.FC = () => {
               <Music className="h-8 w-8 sm:h-12 sm:w-12 text-amber-400" />
             </div>
           </div>
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-2 px-4">Welcome to BandScore!</h1>
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-2 px-4">Welcome to the Band Olympics leaderboard!</h1>
           <p className="text-white/70 text-sm sm:text-base lg:text-lg mb-4 px-4">Choose your instrument section to get started</p>
           <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg p-3 sm:p-4 max-w-2xl mx-auto">
             <p className="text-amber-200 text-xs sm:text-sm">
