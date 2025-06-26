@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Embedding Example - WARU Band Olympics</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: #1e293b;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .content {
+            padding: 20px;
+        }
+        
+        .embed-container {
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 20px 0;
+            background: white;
+        }
+        
+        .leaderboard-iframe {
+            width: 100%;
+            border: none;
+            display: block;
+            min-height: 600px;
+            transition: height 0.3s ease;
+        }
+        
+        .instructions {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎵 Your Main Website</h1>
+            <p>This demonstrates how to embed the WARU Band Olympics Leaderboard</p>
+        </div>
+        
+        <div class="content">
+            <h2>Live Embedded Leaderboard</h2>
+            <p>Below is the actual leaderboard embedded in this page:</p>
+            
+            <div class="embed-container">
+                <iframe 
+                    id="leaderboard-iframe"
+                    class="leaderboard-iframe"
+                    src="https://graysonhuey.github.io/leaderboards/"
+                    title="WARU Band Olympics Leaderboard"
+                    allow="clipboard-read; clipboard-write"
+                    loading="lazy">
+                </iframe>
+            </div>
+            
+            <div class="instructions">
+                <h3>📋 How to Embed This on Your Site</h3>
+                <p>Copy and paste this HTML code into your website:</p>
+                
+                <div class="code-block">
+&lt;!-- Basic Embed --&gt;
+&lt;iframe 
+    src="https://graysonhuey.github.io/leaderboards/"
+    width="100%" 
+    height="600"
+    frameborder="0"
+    title="WARU Band Olympics Leaderboard"
+    allow="clipboard-read; clipboard-write"&gt;
+&lt;/iframe&gt;
+                </div>
+                
+                <h4>🚀 Advanced Embed with Auto-Resize</h4>
+                <p>For automatic height adjustment, use this enhanced version:</p>
+                
+                <div class="code-block">
+&lt;div id="leaderboard-container"&gt;
+    &lt;iframe 
+        id="leaderboard-iframe"
+        src="https://graysonhuey.github.io/leaderboards/"
+        width="100%" 
+        height="600"
+        frameborder="0"
+        title="WARU Band Olympics Leaderboard"
+        allow="clipboard-read; clipboard-write"
+        style="border: none; display: block;"&gt;
+    &lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+// Auto-resize iframe based on content
+window.addEventListener('message', function(event) {
+    // Verify origin for security
+    if (event.origin !== 'https://graysonhuey.github.io') return;
+    
+    const iframe = document.getElementById('leaderboard-iframe');
+    if (!iframe) return;
+    
+    // Handle different message types
+    switch (event.data.type) {
+        case 'IFRAME_READY':
+        case 'HEIGHT_CHANGE':
+        case 'RESIZE_RESPONSE':
+            if (event.data.height) {
+                iframe.style.height = event.data.height + 'px';
+            }
+            break;
+    }
+});
+
+// Request initial size
+document.getElementById('leaderboard-iframe').onload = function() {
+    this.contentWindow.postMessage({
+        type: 'RESIZE_REQUEST'
+    }, 'https://graysonhuey.github.io');
+};
+&lt;/script&gt;
+                </div>
+            </div>
+            
+            <div class="instructions">
+                <h3>⚙️ Customization Options</h3>
+                <ul>
+                    <li><strong>Width:</strong> Set to any value (100%, 800px, etc.)</li>
+                    <li><strong>Height:</strong> Use fixed height or auto-resize script</li>
+                    <li><strong>Border:</strong> Add CSS styling to the iframe</li>
+                    <li><strong>Loading:</strong> Use loading="lazy" for better performance</li>
+                </ul>
+                
+                <h4>🎨 Styling the Container</h4>
+                <div class="code-block">
+.leaderboard-embed {
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin: 20px 0;
+}
+
+.leaderboard-embed iframe {
+    width: 100%;
+    border: none;
+    display: block;
+}
+                </div>
+            </div>
+            
+            <div class="instructions">
+                <h3>🔒 Security & Performance</h3>
+                <ul>
+                    <li><strong>HTTPS Only:</strong> The leaderboard requires HTTPS</li>
+                    <li><strong>Cross-Origin:</strong> Fully functional across different domains</li>
+                    <li><strong>Responsive:</strong> Automatically adapts to container width</li>
+                    <li><strong>Authentication:</strong> Google sign-in works within iframe</li>
+                    <li><strong>Real-time:</strong> Updates automatically without page refresh</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Auto-resize functionality for the demo
+        window.addEventListener('message', function(event) {
+            if (event.origin !== 'https://graysonhuey.github.io') return;
+            
+            const iframe = document.getElementById('leaderboard-iframe');
+            if (!iframe) return;
+            
+            switch (event.data.type) {
+                case 'IFRAME_READY':
+                case 'HEIGHT_CHANGE':
+                case 'RESIZE_RESPONSE':
+                    if (event.data.height) {
+                        iframe.style.height = Math.max(600, event.data.height) + 'px';
+                    }
+                    break;
+            }
+        });
+
+        // Request initial size when iframe loads
+        document.getElementById('leaderboard-iframe').onload = function() {
+            setTimeout(() => {
+                this.contentWindow.postMessage({
+                    type: 'RESIZE_REQUEST'
+                }, 'https://graysonhuey.github.io');
+            }, 1000);
+        };
+    </script>
+</body>
+</html>

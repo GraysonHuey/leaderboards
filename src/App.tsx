@@ -61,6 +61,83 @@ function App() {
   // Add error boundary
   const [hasError, setHasError] = React.useState(false);
 
+  // Check if we're running in an iframe
+  const isEmbedded = React.useMemo(() => {
+    try {
+      return window.self !== window.top;
+    } catch (e) {
+      return true; // If we can't access window.top, we're likely in an iframe
+    }
+  }, []);
+
+  // Add message listener for parent-child communication
+  React.useEffect(() => {
+    if (isEmbedded) {
+      const handleMessage = (event: MessageEvent) => {
+        // Only accept messages from trusted origins
+        const trustedOrigins = [
+          'https://your-main-site.com', // Replace with your main site's domain
+          'http://localhost:3000', // For local development
+          'http://localhost:5173', // For Vite dev server
+        ];
+
+        if (!trustedOrigins.includes(event.origin)) {
+          return;
+        }
+
+        // Handle different message types
+        switch (event.data.type) {
+          case 'RESIZE_REQUEST':
+            // Send current height to parent
+            const height = document.documentElement.scrollHeight;
+            event.source?.postMessage({
+              type: 'RESIZE_RESPONSE',
+              height: height
+            }, event.origin);
+            break;
+          
+          case 'THEME_CHANGE':
+            // Handle theme changes from parent if needed
+            document.documentElement.setAttribute('data-theme', event.data.theme);
+            break;
+        }
+      };
+
+      window.addEventListener('message', handleMessage);
+      
+      // Send initial height to parent
+      const sendInitialHeight = () => {
+        const height = document.documentElement.scrollHeight;
+        window.parent.postMessage({
+          type: 'IFRAME_READY',
+          height: height
+        }, '*');
+      };
+
+      // Send height after a short delay to ensure content is loaded
+      setTimeout(sendInitialHeight, 100);
+
+      return () => window.removeEventListener('message', handleMessage);
+    }
+  }, [isEmbedded]);
+
+  // Monitor height changes and notify parent
+  React.useEffect(() => {
+    if (!isEmbedded) return;
+
+    const resizeObserver = new ResizeObserver(() => {
+      const height = document.documentElement.scrollHeight;
+      window.parent.postMessage({
+        type: 'HEIGHT_CHANGE',
+        height: height
+      }, '*');
+    });
+
+    resizeObserver.observe(document.body);
+
+    return () => resizeObserver.disconnect();
+  }, [isEmbedded]);
+
   React.useEffect(() => {
     const handleError = (error: ErrorEvent) => {
       console.error('Application error:', error);
@@ -88,12 +165,19 @@ function App() {
     );
   }
 
+  // Adjust container classes based on embedding context
+  const containerClass = isEmbedded 
+    ? "min-h-fit" // Don't force full height when embedded
+    : "min-h-screen";
+
   return (
-    <Router basename="/leaderboards">
-      <AuthProvider>
-        <AppContent />
-      </AuthProvider>
-    </Router>
+    <div className={containerClass}>
+      <Router basename="/leaderboards">
+        <AuthProvider>
+          <AppContent />
+        </AuthProvider>
+      </Router>
+    </div>
   );
 }
 

@@ -1,3 +1,23 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Embedded mode adjustments */
+[data-embedded="true"] {
+  /* Remove fixed heights when embedded */
+  min-height: auto !important;
+}
+
+[data-embedded="true"] .min-h-screen {
+  min-height: auto !important;
+}
+
+/* Ensure proper scrolling in embedded contexts */
+.embedded-mode {
+  overflow-x: hidden;
+}
+
+/* Adjust navigation for embedded contexts */
+.embedded-mode nav {
+  position: relative !important;
+}
