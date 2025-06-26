@@ -1,6 +1,6 @@
 import React from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
-import { Music, Trophy, Users, Settings, LogOut, Crown, Menu, X } from 'lucide-react';
+import { Trophy, Users, Settings, LogOut, Crown, Menu, X } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 
 const Layout: React.FC = () => {
@@ -52,7 +52,7 @@ const Layout: React.FC = () => {
           <div className="flex justify-between h-16">
             <div className="flex items-center">
               <Link to="/dashboard" className="flex items-center space-x-2">
-                <link rel="icon" type="image/png" href="/favicon.png" />
+                <link rel="icon" type="image/png" href="../../favicon.png" />
                 <span className="text-lg sm:text-xl font-bold text-white">WARU Band Olympics</span>
               </Link>
             </div>
