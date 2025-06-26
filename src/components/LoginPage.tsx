@@ -1,5 +1,5 @@
 import React from 'react';
-import { Music, Trophy, Users, Star } from 'lucide-react';
+import { Music } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 
 const LoginPage: React.FC = () => {
