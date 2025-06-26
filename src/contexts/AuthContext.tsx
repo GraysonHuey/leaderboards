@@ -31,20 +31,37 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<User | null>(null);
   const [firebaseUser, setFirebaseUser] = useState<FirebaseUser | null>(null);
   const [loading, setLoading] = useState(true);
+  const [authStateStable, setAuthStateStable] = useState(false);
 
   useEffect(() => {
+    let authStateTimeout: NodeJS.Timeout;
+    
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-      setFirebaseUser(firebaseUser);
-      
-      if (firebaseUser) {
-        await setupUserListener(firebaseUser);
-      } else {
-        setUser(null);
-        setLoading(false);
+      // Clear any existing timeout
+      if (authStateTimeout) {
+        clearTimeout(authStateTimeout);
       }
+      
+      // Set a small delay to ensure auth state is stable
+      authStateTimeout = setTimeout(async () => {
+        setFirebaseUser(firebaseUser);
+        setAuthStateStable(true);
+        
+        if (firebaseUser) {
+          await setupUserListener(firebaseUser);
+        } else {
+          setUser(null);
+          setLoading(false);
+        }
+      }, 100);
     });
 
-    return () => unsubscribe();
+    return () => {
+      unsubscribe();
+      if (authStateTimeout) {
+        clearTimeout(authStateTimeout);
+      }
+    };
   }, []);
 
   const setupUserListener = async (firebaseUser: FirebaseUser) => {
@@ -73,16 +90,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const unsubscribeUser = onSnapshot(userDocRef, (doc) => {
         if (doc.exists()) {
           const userData = doc.data();
-          setUser({
-            id: firebaseUser.uid,
-            email: userData.email,
-            name: userData.name,
-            avatar_url: userData.avatar_url,
-            section: userData.section,
-            role: userData.role,
-            points: userData.points,
-            created_at: userData.created_at?.toDate?.()?.toISOString() || new Date().toISOString(),
-          });
+          
+          // Additional verification: ensure the Firebase user ID matches
+          if (firebaseUser.uid === doc.id) {
+            setUser({
+              id: firebaseUser.uid,
+              email: userData.email,
+              name: userData.name,
+              avatar_url: userData.avatar_url,
+              section: userData.section,
+              role: userData.role,
+              points: userData.points,
+              created_at: userData.created_at?.toDate?.()?.toISOString() || new Date().toISOString(),
+            });
+          } else {
+            console.warn('Auth state mismatch detected, signing out for security');
+            firebaseSignOut(auth);
+          }
         }
         setLoading(false);
       }, (error) => {
@@ -100,6 +124,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signInWithGoogle = async () => {
     try {
+      // Force account selection to avoid confusion with multiple accounts
+      googleProvider.setCustomParameters({
+        prompt: 'select_account'
+      });
+      
       await signInWithPopup(auth, googleProvider);
     } catch (error) {
       console.error('Error signing in with Google:', error);
@@ -110,6 +139,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const signOut = async () => {
     try {
       await firebaseSignOut(auth);
+      // Clear any cached user state
+      setUser(null);
+      setFirebaseUser(null);
+      setAuthStateStable(false);
     } catch (error) {
       console.error('Error signing out:', error);
       throw error;
@@ -119,7 +152,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const value = {
     user,
     firebaseUser,
-    loading,
+    loading: loading || !authStateStable,
     signInWithGoogle,
     signOut,
   };
