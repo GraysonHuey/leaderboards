@@ -76,7 +76,7 @@ function App() {
       const handleMessage = (event: MessageEvent) => {
         // Only accept messages from trusted origins
         const trustedOrigins = [
-          'https://your-main-site.com', // Replace with your main site's domain
+          'https://graysonhuey.github.io/leaderboards', // Replace with your main site's domain
           'http://localhost:3000', // For local development
           'http://localhost:5173', // For Vite dev server
         ];

@@ -52,7 +52,7 @@ const Layout: React.FC = () => {
           <div className="flex justify-between h-16">
             <div className="flex items-center">
               <Link to="/dashboard" className="flex items-center space-x-2">
-                <Music className="h-6 w-6 sm:h-8 sm:w-8 text-amber-400" />
+                <link rel="icon" type="image/png" href="/favicon.png" />
                 <span className="text-lg sm:text-xl font-bold text-white">WARU Band Olympics</span>
               </Link>
             </div>
